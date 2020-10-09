@@ -1,28 +1,25 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <q-layout view="lHh Lpr lFf">
+        <q-header elevated>
+            <q-toolbar>
+                <q-toolbar-title>
+                    Code Highlighter
+                </q-toolbar-title>
+            </q-toolbar>
+        </q-header>
+
+        <q-page-container>
+            <!-- eslint-disable-next-line max-len -->
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo autem, cum officia debitis necessitatibus voluptatum, vitae exercitationem sint voluptatibus vero dolorum quibusdam dicta esse. Nisi blanditiis itaque fugit quaerat alias.
+        </q-page-container>
+    </q-layout>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
-
 export default {
-  name: 'App',
-  components: {
-    HelloWorld,
-  },
+    name: 'App',
 };
 </script>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style>
 </style>
