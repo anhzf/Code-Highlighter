@@ -43,13 +43,14 @@ export default {
     methods: {
         async post2Server() {
             LoadingBar.start();
-            const reqBody = { code: this.codeInput };
-            const reqConfig = this.codeConfig;
-            const res = await highlighterService.post('/', reqBody, reqConfig);
+            if (this.codeInput) {
+                const reqBody = { code: this.codeInput };
+                const reqConfig = this.codeConfig;
+                const res = await highlighterService.post('/', reqBody, reqConfig);
 
-            this.rendered = res.data;
+                this.rendered = res.data;
+            }
             LoadingBar.stop();
-            LoadingBar.increment();
         },
     },
 

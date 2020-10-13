@@ -26,6 +26,10 @@ export default {
 
     mixins: [supportTab],
 
+    data: () => ({
+        indentStyle: '\t',
+    }),
+
     computed: {
         codeInput: {
             get() {
