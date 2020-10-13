@@ -4,7 +4,10 @@ export default {
     state() {
         return {
             codeInput: '',
-            ops: {},
+            lang: null,
+            fileName: null,
+            highlight: null,
+            twoslash: null,
         };
     },
 
@@ -12,9 +15,17 @@ export default {
         updateCodeInput(state, val) {
             state.codeInput = val;
         },
-
-        setConfig(state, val) {
-            state.ops = val;
+        setLang(state, val) {
+            state.lang = val;
+        },
+        setTwoslash(state, val) {
+            state.twoslash = val;
+        },
+        setFileName(state, val) {
+            state.fileName = val;
+        },
+        setHighlight(state, val) {
+            state.highlight = val;
         },
     },
 };

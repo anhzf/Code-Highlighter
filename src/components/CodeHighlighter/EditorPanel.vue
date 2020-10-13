@@ -1,7 +1,7 @@
 <template>
     <div class="row full-width justify-center">
         <q-select
-            v-model="lang"
+            v-model.lazy="lang"
             label="Language"
             :options="langOps"
             dense
@@ -12,7 +12,7 @@
         </q-select>
         <template>
             <q-input
-                v-model="fileName"
+                v-model.lazy="fileName"
                 label="File Name (Optional)"
                 dense
                 square
@@ -22,7 +22,7 @@
             </q-input>
             <q-select
                 v-if="['typescript', 'json'].includes(lang)"
-                v-model="twoslashes"
+                v-model.lazy="twoslashes"
                 label="Twoslashes"
                 class="col-2"
                 dense
@@ -31,7 +31,7 @@
             />
         </template>
         <q-input
-            v-model.number="highlightedLine"
+            v-model.lazy.number="highlightedLine"
             label="Highlighted Line"
             type="number"
             dense
@@ -53,12 +53,42 @@ export default {
         return {
             langOps: [],
             twoslashesOps: [],
-
-            lang: '',
-            twoslashes: '',
-            fileName: '',
-            highlightedLine: null,
         };
+    },
+
+    computed: {
+        lang: {
+            get() {
+                return this.$store.state.highlighter.lang;
+            },
+            set(v) {
+                this.$store.commit('highlighter/setLang', v);
+            },
+        },
+        twoslashes: {
+            get() {
+                return this.$store.state.highlighter.twoslash;
+            },
+            set(v) {
+                this.$store.commit('highlighter/setTwoslash', v);
+            },
+        },
+        fileName: {
+            get() {
+                return this.$store.state.highlighter.fileName;
+            },
+            set(v) {
+                this.$store.commit('highlighter/setFileName', v);
+            },
+        },
+        highlightedLine: {
+            get() {
+                return this.$store.state.highlighter.highlight;
+            },
+            set(v) {
+                this.$store.commit('highlighter/setHighlight', v);
+            },
+        },
     },
 
     methods: {
@@ -67,32 +97,6 @@ export default {
                 languages: this.langOps,
                 twoslashes: this.twoslashesOps,
             } = await highlighterServices.getAvailableOptions());
-        },
-
-        setupConfig() {
-            const config = {
-                lang: this.lang,
-                fileName: this.fileName,
-                highlight: this.highlightedLine,
-                twoslash: this.twoslashes,
-            };
-
-            this.$store.commit('highlighter/setConfig', config);
-        },
-    },
-
-    watch: {
-        lang() {
-            this.setupConfig();
-        },
-        fileName() {
-            this.setupConfig();
-        },
-        highlightedLine() {
-            this.setupConfig();
-        },
-        twoslashesOps() {
-            this.setupConfig();
         },
     },
 

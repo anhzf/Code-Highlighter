@@ -30,14 +30,19 @@ export default {
             return this.$store.state.highlighter.codeInput;
         },
         codeConfig() {
-            return this.$store.state.highlighter.ops;
+            return {
+                lang: this.$store.state.highlighter.lang,
+                fileName: this.$store.state.highlighter.fileName,
+                twoslash: this.$store.state.highlighter.twoslash,
+                highlight: this.$store.state.highlighter.highlight,
+            };
         },
     },
 
     methods: {
         async post2Server() {
             const reqBody = { code: this.codeInput };
-            const reqConfig = this.$store.state.highlighter.ops;
+            const reqConfig = this.codeConfig;
             const res = await highlighterService.post('/', reqBody, reqConfig);
 
             this.rendered = res.data;
