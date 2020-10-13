@@ -9,15 +9,20 @@
         </q-header>
 
         <q-page-container>
-            <!-- eslint-disable-next-line max-len -->
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo autem, cum officia debitis necessitatibus voluptatum, vitae exercitationem sint voluptatibus vero dolorum quibusdam dicta esse. Nisi blanditiis itaque fugit quaerat alias.
+            <code-highlighter />
         </q-page-container>
     </q-layout>
 </template>
 
 <script>
+import CodeHighlighter from './components/CodeHighlighter';
+
 export default {
     name: 'App',
+
+    components: {
+        CodeHighlighter,
+    },
 };
 </script>
 
