@@ -14,6 +14,7 @@ import highlighterService from '@/services/highlighter';
 import componentLoading from '@/components/componentLoading';
 import { debounceWithPromise } from '@/utils';
 import '@/styles/_shiki-highlighter.scss';
+import { LoadingBar } from 'quasar';
 
 export default {
     name: 'CodeHighlighter',
@@ -21,7 +22,7 @@ export default {
     data() {
         return {
             rendered: '',
-            debounced: debounceWithPromise(this.post2Server, 1000),
+            debounced: debounceWithPromise(this.post2Server, 300),
         };
     },
 
@@ -41,11 +42,14 @@ export default {
 
     methods: {
         async post2Server() {
+            LoadingBar.start();
             const reqBody = { code: this.codeInput };
             const reqConfig = this.codeConfig;
             const res = await highlighterService.post('/', reqBody, reqConfig);
 
             this.rendered = res.data;
+            LoadingBar.stop();
+            LoadingBar.increment();
         },
     },
 
