@@ -1,11 +1,13 @@
 <template>
     <div class="row">
-        <div class="col">
+        <div class="col-md col-12">
             <code-editor />
         </div>
-        <div class="col q-pa-md">
+        <div class="col-md col-12 q-pa-md">
             <div v-html="rendered" />
         </div>
+
+        <q-btn @click="showOv" />
     </div>
 </template>
 
@@ -51,6 +53,10 @@ export default {
                 this.rendered = res.data;
             }
             LoadingBar.stop();
+        },
+
+        showOv() {
+            this.$root.$emit('showOverlay');
         },
     },
 

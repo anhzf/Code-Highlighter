@@ -24,6 +24,19 @@ import NotificationMessages from './components/NotificationMessages';
 export default {
     name: 'App',
 
+    data() {
+        return {
+            overlay: false,
+        };
+    },
+    mounted() {
+        this.$store.dispatch('user/authenticate', 'anh');
+
+        this.$root.$on('showOverlay', () => {
+            console.log('trigerred!');
+        });
+    },
+
     components: {
         CodeHighlighter, NotificationMessages,
     },
