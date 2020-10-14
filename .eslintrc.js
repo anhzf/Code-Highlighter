@@ -30,6 +30,7 @@ module.exports = {
         'func-names': 'off',
         'indent': ['error', 4],
         'import/extensions': 'off',
+        'import/prefer-default-export': 'off',
         'max-len': ['error', {
             code: 150,
             comments: 200,
