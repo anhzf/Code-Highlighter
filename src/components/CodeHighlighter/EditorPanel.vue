@@ -32,7 +32,7 @@
         </template>
         <q-input
             v-model.lazy.number="highlightedLine"
-            label="Highlighted Line"
+            label="Highlighted Line (Optional)"
             type="number"
             dense
             square

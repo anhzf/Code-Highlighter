@@ -11,7 +11,8 @@
             outlined
             autogrow
             square
-            style="max-height: 100%; overflow-y: auto;"
+            style="max-height: 100%;"
+            input-style="max-height: 100%; overflow-y: auto;"
             @keydown.tab.self.prevent="enableTab"
         />
     </div>
