@@ -25,6 +25,14 @@ export default {
         return (await this.get('options')).data;
     },
 
+    async highlightCode(config, code) {
+        const res = await this.post('/', { code }, config);
+
+        if (res.success) return res.data;
+
+        throw res.data.details;
+    },
+
     async login(name) {
         const res = await this.post('user/login', { name });
 

@@ -42,15 +42,18 @@ export default {
 
     methods: {
         async post2Server() {
-            LoadingBar.start();
             if (this.codeInput) {
-                const reqBody = { code: this.codeInput };
-                const reqConfig = this.codeConfig;
-                const res = await highlighterService.post('/', reqBody, reqConfig);
-
-                this.rendered = res.data;
+                LoadingBar.start();
+                try {
+                    this.rendered = await highlighterService.highlightCode(this.codeConfig, this.codeInput);
+                } catch (errors) {
+                    console.log(errors);
+                    errors.forEach((err) => {
+                        this.$store.commit('pushNotificationMessage', err.message);
+                    });
+                }
+                LoadingBar.stop();
             }
-            LoadingBar.stop();
         },
     },
 
