@@ -37,6 +37,13 @@ import { mapState } from 'vuex';
 export default {
     name: 'NotificationMessages',
 
+    props: {
+        timeout: {
+            type: Number,
+            default: 10000,
+        },
+    },
+
     computed: {
         ...mapState(['notifMessages']),
     },
@@ -44,6 +51,16 @@ export default {
     methods: {
         close(key) {
             this.$store.commit('delNotificationMessage', key);
+        },
+    },
+
+    watch: {
+        notifMessages(newVal, val) {
+            if (newVal.length >= val.length) {
+                setTimeout(() => {
+                    this.$store.commit('popNotificationMessage');
+                }, this.timeout);
+            }
         },
     },
 };

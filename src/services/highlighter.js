@@ -25,6 +25,20 @@ export default {
         return (await this.get('options')).data;
     },
 
+    async login(name) {
+        const res = await this.post('user/login', { name });
+
+        if (res.success) return res.data;
+        throw res.message;
+    },
+
+    async signUp(name) {
+        const res = await this.post('user/register', { name });
+
+        if (res.success) return res.data;
+        throw res.message;
+    },
+
     async get(path = '', params = {}) {
         this.method = 'GET';
         return this.__request(path, null, params);

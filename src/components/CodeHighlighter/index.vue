@@ -6,8 +6,6 @@
         <div class="col-md col-12 q-pa-md">
             <div v-html="rendered" />
         </div>
-
-        <q-btn @click="showOv" />
     </div>
 </template>
 
@@ -53,10 +51,6 @@ export default {
                 this.rendered = res.data;
             }
             LoadingBar.stop();
-        },
-
-        showOv() {
-            this.$root.$emit('showOverlay');
         },
     },
 

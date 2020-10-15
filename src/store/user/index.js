@@ -1,39 +1,51 @@
 import highlighterService from '@/services/highlighter';
+import { LoadingBar } from 'quasar';
 
 export default {
     namespaced: true,
 
     state() {
         return {
-            user: null,
+            name: null,
+            id: null,
+            meta: null,
         };
     },
 
     mutations: {
         updateAuthState(state, val) {
-            state.user = val;
+            ({
+                name: state.name,
+                id: state.id,
+                ...state.meta
+            } = val);
+        },
+
+        resetUser(state) {
+            state.name = null;
+            state.id = null;
+            state.meta = null;
         },
     },
 
     actions: {
         async authenticate(context, userName) {
-            const res = await highlighterService.post('user/register', { name: userName });
-            if (res.success) {
-                context.commit('updateAuthState', res.data);
-            } else {
-                context.commit('pushNotificationMessage', res.message, { root: true });
+            LoadingBar.start();
+            try {
+                const res = await highlighterService.login(userName);
+
+                context.commit('updateAuthState', res);
+                context.commit('pushNotificationMessage', `Logged in as ${res.name}!`, { root: true });
+            } catch (err) {
+                context.commit('pushNotificationMessage', err, { root: true });
             }
+            LoadingBar.stop();
         },
-        // authenticate: {
-        //     root: true,
-        //     async handler(context, userName) {
-        //         const res = await highlighterService.post('user/register', { name: userName });
-        //         if (res.success) {
-        //             context.commit('user/updateAuthState', res.data);
-        //         } else {
-        //             context.commit('pushNotificationMessage', res.message);
-        //         }
-        //     },
-        // },
+
+        logout(context) {
+            LoadingBar.start();
+            context.commit('resetUser');
+            LoadingBar.stop();
+        },
     },
 };

@@ -8,9 +8,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        notifMessages: [
-            'haii, selamat datang di indomaret@',
-        ],
+        notifMessages: [],
+        isLoading: false,
     },
     mutations: {
         pushNotificationMessage(state, val) {
@@ -18,6 +17,12 @@ export default new Vuex.Store({
         },
         delNotificationMessage(state, arrayIndex) {
             state.notifMessages.splice(arrayIndex, 1);
+        },
+        popNotificationMessage(state) {
+            state.notifMessages.pop();
+        },
+        isLoading(state, val) {
+            state.isLoading = val;
         },
     },
     actions: {
