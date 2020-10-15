@@ -1,4 +1,9 @@
-# vue-vuex-submission
+# Code Highlighter
+_* API Provided by https://highlight-code-api.vercel.app/api_
+_** MIT License_
+
+## Live Demo
+https://anh-code-highlighter.web.app/
 
 ## Project setup
 ```
