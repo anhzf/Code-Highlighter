@@ -1,4 +1,4 @@
-import highlighterService from '@/services/highlighter';
+import auth from '@/services/auth';
 import { LoadingBar } from 'quasar';
 
 export default {
@@ -32,7 +32,7 @@ export default {
         async authenticate(context, userName) {
             LoadingBar.start();
             try {
-                const res = await highlighterService.login(userName);
+                const res = await auth.login(userName);
 
                 context.commit('updateAuthState', res);
                 context.commit('pushNotificationMessage', `Logged in as ${res.name}!`, { root: true });
