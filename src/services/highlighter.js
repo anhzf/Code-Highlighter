@@ -17,8 +17,14 @@ export default {
         throw res.data.details;
     },
 
+    async getPNG(config, code) {
+        api.method = 'POST';
 
+        const options = { ...config, download: 1 };
+        const res = await api.request('/', { code }, options);
 
+        if (res.body instanceof ReadableStream) return res;
 
+        throw (await res.json()).data.details;
     },
 };

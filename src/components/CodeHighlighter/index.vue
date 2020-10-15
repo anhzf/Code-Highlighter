@@ -3,8 +3,21 @@
         <div class="col-md col-12">
             <code-editor />
         </div>
-        <div class="col-md col-12 q-pa-md">
-            <div v-html="rendered" />
+
+        <div class="col-md col-12 q-pa-md column items-center">
+            <div
+                v-html="rendered"
+                class="self-stretch"
+            />
+
+            <q-btn
+                v-if="rendered"
+                icon="get_app"
+                color="primary"
+                @click="downloadCode"
+            >
+                download PNG
+            </q-btn>
         </div>
     </div>
 </template>
@@ -47,10 +60,27 @@ export default {
                 try {
                     this.rendered = await highlighterService.highlightCode(this.codeConfig, this.codeInput);
                 } catch (errors) {
-                    console.log(errors);
-                    errors.forEach((err) => {
-                        this.$store.commit('pushNotificationMessage', err.message);
-                    });
+                    errors.forEach((err) => this.$store.commit('pushNotificationMessage', err.message));
+                }
+                LoadingBar.stop();
+            }
+        },
+
+        async downloadCode() {
+            if (this.codeInput) {
+                LoadingBar.start();
+                try {
+                    const res = await highlighterService.getPNG(this.codeConfig, this.codeInput);
+                    const blob = await res.blob();
+                    const virtualAnchor = document.createElement('A');
+
+                    virtualAnchor.href = URL.createObjectURL(blob);
+                    virtualAnchor.target = '_blank';
+                    virtualAnchor.download = 'code';
+
+                    virtualAnchor.click();
+                } catch (errors) {
+                    errors.forEach((err) => this.$store.commit('pushNotificationMessage', err.message));
                 }
                 LoadingBar.stop();
             }
@@ -58,11 +88,17 @@ export default {
     },
 
     watch: {
-        codeInput() {
-            this.debounced();
+        codeInput: {
+            immediate: true,
+            handler() {
+                this.debounced();
+            },
         },
-        codeConfig() {
-            this.debounced();
+        codeConfig: {
+            immediate: true,
+            handler() {
+                this.debounced();
+            },
         },
     },
 
