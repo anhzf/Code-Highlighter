@@ -1,11 +1,8 @@
 <template>
     <q-layout view="lHh Lpr lFf">
-        <c-overlay v-if="overlay" />
         <q-header elevated>
             <q-toolbar>
-                <q-toolbar-title>
-                    Code Highlighter
-                </q-toolbar-title>
+                <q-toolbar-title>Code Highlighter</q-toolbar-title>
 
                 <q-space />
 
