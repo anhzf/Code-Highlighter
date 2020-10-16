@@ -1,4 +1,5 @@
 /* eslint-disable import/prefer-default-export */
+import store from './store';
 
 // Stealed from https://stackoverflow.com/questions/35228052/debounce-function-implemented-with-promises :v
 export function debounceWithPromise(inner, ms = 0) {
@@ -18,6 +19,14 @@ export function debounceWithPromise(inner, ms = 0) {
 
         return new Promise((r) => resolves.push(r));
     };
+}
+
+export function compact(val) {
+    // return val.reduce((acc, v) => (v ? [...acc, v] : [...acc]), []);
+    return Object.entries(val).reduce((acc, [k, v]) => {
+        if (v) acc[k] = (typeof v === 'object') ? compact(v) : v;
+        return acc;
+    }, []);
 }
 
 // COMPONENTS FUNCTION

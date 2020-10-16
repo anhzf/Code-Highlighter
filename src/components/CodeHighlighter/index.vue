@@ -10,14 +10,26 @@
                 class="self-stretch"
             />
 
-            <q-btn
+            <div
                 v-if="rendered"
-                icon="get_app"
-                color="primary"
-                @click="downloadCode"
+                class="code-actions"
             >
-                download PNG
-            </q-btn>
+                <q-btn
+                    icon="get_app"
+                    color="primary"
+                    @click="downloadCode"
+                >
+                    Download PNG
+                </q-btn>
+
+                <q-btn
+                    icon="add"
+                    color="positive"
+                    @click="addToCollection"
+                >
+                    Save to collection
+                </q-btn>
+            </div>
         </div>
     </div>
 </template>
@@ -34,7 +46,7 @@ export default {
 
     data() {
         return {
-            rendered: '',
+            rendered: null,
             debounced: debounceWithPromise(this.post2Server, 300),
         };
     },
@@ -79,11 +91,29 @@ export default {
                     virtualAnchor.download = 'code';
 
                     virtualAnchor.click();
-                } catch (errors) {
-                    errors.forEach((err) => this.$store.commit('pushNotificationMessage', err.message));
+                } catch (errs) {
+                    this.catchErrors(errs);
                 }
                 LoadingBar.stop();
             }
+        },
+
+        async addToCollection() {
+            if (this.codeInput) {
+                LoadingBar.start();
+                try {
+                    await highlighterService.storeCode(this.codeConfig, this.codeInput);
+
+                    notify('Code snippet saved!');
+                } catch (errs) {
+                    this.catchErrors(errs);
+                }
+                LoadingBar.stop();
+            }
+        },
+
+        catchErrors(errors) {
+            errors.forEach((err) => notify(err.message));
         },
     },
 
@@ -110,3 +140,12 @@ export default {
     },
 };
 </script>
+
+<style lang="scss" scoped>
+.code-actions {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+</style>

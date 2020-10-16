@@ -1,3 +1,5 @@
+import store from '@/store';
+import { compact } from '@/utils';
 import Api from './api';
 
 const api = new Api({
@@ -26,5 +28,20 @@ export default {
         if (res.body instanceof ReadableStream) return res;
 
         throw (await res.json()).data.details;
+    },
+
+    async storeCode(config, code) {
+        const body = {
+            user: store.state.user.id,
+            content: {
+                code,
+                ...compact(config),
+            },
+        };
+        const res = await api.post('code/store', body);
+
+        if (res.success) return res.data;
+
+        throw res.data.details;
     },
 };
