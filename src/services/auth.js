@@ -1,3 +1,4 @@
+import { LocalStorage } from 'quasar';
 import Api from './api';
 
 const api = new Api({
@@ -5,10 +6,21 @@ const api = new Api({
 });
 
 export default {
+    get loggedInUser() {
+        return LocalStorage.getItem('loggedIn');
+    },
+    set loggedInUser(name) {
+        return LocalStorage.set('loggedIn', name);
+    },
+
     async login(name) {
         const res = await api.post('user/login', { name });
 
-        if (res.success) return res.data;
+        if (res.success) {
+            this.loggedInUser = res.data.name;
+            return res.data;
+        }
+        this.loggedInUser = null;
         throw res.message;
     },
 

@@ -25,7 +25,7 @@
 <script>
 import highlighterService from '@/services/highlighter';
 import componentLoading from '@/components/componentLoading';
-import { debounceWithPromise } from '@/utils';
+import { debounceWithPromise, notify } from '@/utils';
 import '@/styles/_shiki-highlighter.scss';
 import { LoadingBar } from 'quasar';
 
@@ -59,8 +59,8 @@ export default {
                 LoadingBar.start();
                 try {
                     this.rendered = await highlighterService.highlightCode(this.codeConfig, this.codeInput);
-                } catch (errors) {
-                    errors.forEach((err) => this.$store.commit('pushNotificationMessage', err.message));
+                } catch (errs) {
+                    this.catchErrors(errs);
                 }
                 LoadingBar.stop();
             }

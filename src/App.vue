@@ -57,8 +57,9 @@
 import { mapState } from 'vuex';
 import { LoadingBar } from 'quasar';
 import CodeHighlighter from './components/CodeHighlighter';
-import NotificationMessages from './components/NotificationMessages';
+import NotificationMessages from './components/notificationMessages';
 import auth from './services/auth';
+import { notify } from './utils';
 
 export default {
     name: 'App',
@@ -92,9 +93,9 @@ export default {
                 LoadingBar.start();
                 try {
                     const res = await auth.signUp(data);
-                    this.$store.commit('pushNotificationMessage', `Registered as ${res.name}`);
+                    notify(`Registered as ${res.name}`);
                 } catch (err) {
-                    this.$store.commit('pushNotificationMessage', err);
+                    notify(err);
                 }
                 LoadingBar.stop();
             });
@@ -110,6 +111,10 @@ export default {
                 cancel: true,
             }).onOk((data) => data);
         },
+    },
+
+    mounted() {
+        if (auth.loggedInUser) this.$store.dispatch('user/authenticate', auth.loggedInUser);
     },
 
     components: {

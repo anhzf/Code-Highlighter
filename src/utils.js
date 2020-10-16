@@ -19,3 +19,8 @@ export function debounceWithPromise(inner, ms = 0) {
         return new Promise((r) => resolves.push(r));
     };
 }
+
+// COMPONENTS FUNCTION
+export function notify(message) {
+    store.commit('pushNotificationMessage', message);
+}

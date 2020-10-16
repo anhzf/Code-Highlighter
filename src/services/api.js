@@ -1,12 +1,10 @@
-function compact(...val) {
-    return val.reduce((acc, v) => (v ? [...acc, v] : [...acc]), []);
-}
+import { compact } from '@/utils';
 
 function resolveUrlPath(url, path) {
     const Url = new URL(url);
 
     const pathToJoin = path.split('/');
-    const paths = compact(...[...Url.pathname.split('/'), ...pathToJoin]);
+    const paths = compact([...Url.pathname.split('/'), ...pathToJoin]);
 
     Url.pathname = paths.join('/');
 
