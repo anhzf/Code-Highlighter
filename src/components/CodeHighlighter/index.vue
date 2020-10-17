@@ -12,8 +12,8 @@
         </div>
 
         <div
+            v-if="rendered"
             class="col-12 code-actions"
-            :class="{hidden: Boolean(rendered)}"
         >
             <q-btn
                 icon="get_app"
@@ -36,10 +36,10 @@
 
 <script>
 import highlighterService from '@/services/highlighter';
-import componentLoading from '@/components/componentLoading';
 import { debounceWithPromise, notify } from '@/utils';
 import '@/styles/_shiki-highlighter.scss';
 import { LoadingBar } from 'quasar';
+import CodeEditor from './CodeEditor';
 
 export default {
     name: 'CodeHighlighter',
@@ -133,10 +133,7 @@ export default {
     },
 
     components: {
-        CodeEditor: () => ({
-            component: import('./CodeEditor'),
-            loading: componentLoading,
-        }),
+        CodeEditor,
     },
 };
 </script>

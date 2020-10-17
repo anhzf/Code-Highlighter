@@ -52,18 +52,31 @@
             />
             <section class="snippet-collections row">
                 <div class="snippet-collections__header">
-                    <h1 class="snippet-collections__header__title">
+                    <h1
+                        v-if="isAuth"
+                        class="snippet-collections__header__title"
+                    >
                         My Snippets
+                    </h1>
+
+                    <h1
+                        v-else
+                        class="snippet-collections__header__title"
+                    >
+                        Login to save your code snippets
                     </h1>
                 </div>
 
-                <article class="snippet-collections__contents">
-                    <div
+                <section
+                    v-if="isAuth"
+                    class="snippet-collections__contents"
+                >
+                    <article
                         v-for="(snippet, index) in collections"
                         :key="index"
                         v-html="snippet.code"
                     />
-                </article>
+                </section>
             </section>
         </q-page-container>
 
@@ -95,6 +108,7 @@ export default {
             isAuth: 'id',
             userName: 'name',
         }),
+
         collections() { return this.$store.state.highlighter.collections; },
     },
 
@@ -145,13 +159,15 @@ export default {
         },
     },
 
+    watch: {
+        async isAuth() {
+            await this.getSnippets();
+        },
+    },
+
     mounted() {
-        if (auth.loggedInUser) {
-            // immediately logged in as user in localstorage
-            this.$store.dispatch('user/authenticate', auth.loggedInUser)
-                // immediately get user collections
-                .then(async () => this.getSnippets());
-        }
+        // immediately logged in as user in localstorage
+        if (auth.loggedInUser) this.$store.dispatch('user/authenticate', auth.loggedInUser);
     },
 
     components: {
@@ -190,6 +206,7 @@ export default {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
+        align-items: center;
 
         & .shiki {
             height: auto;
