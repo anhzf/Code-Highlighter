@@ -1,5 +1,5 @@
 <template>
-    <q-layout view="lHh Lpr lFf">
+    <q-layout view="lhh Lpr lFf">
         <q-header elevated>
             <q-toolbar>
                 <q-toolbar-title>Code Highlighter</q-toolbar-title>
@@ -46,7 +46,25 @@
         </q-header>
 
         <q-page-container>
-            <code-highlighter />
+            <code-highlighter
+                class="code-highlighter row"
+                :style="codeHighlighterStyles"
+            />
+            <section class="snippet-collections row">
+                <div class="snippet-collections__header">
+                    <h1 class="snippet-collections__header__title">
+                        My Snippets
+                    </h1>
+                </div>
+
+                <article class="snippet-collections__contents">
+                    <div
+                        v-for="(snippet, index) in collections"
+                        :key="index"
+                        v-html="snippet.code"
+                    />
+                </article>
+            </section>
         </q-page-container>
 
         <notification-messages />
@@ -60,6 +78,7 @@ import CodeHighlighter from './components/CodeHighlighter';
 import NotificationMessages from './components/notificationMessages';
 import auth from './services/auth';
 import { notify } from './utils';
+import highlighterService from './services/highlighter';
 
 export default {
     name: 'App',
@@ -67,6 +86,7 @@ export default {
     data() {
         return {
             overlay: false,
+            codeHighlighterStyles: {},
         };
     },
 
@@ -75,6 +95,7 @@ export default {
             isAuth: 'id',
             userName: 'name',
         }),
+        collections() { return this.$store.state.highlighter.collections; },
     },
 
     methods: {
@@ -101,6 +122,17 @@ export default {
             });
         },
 
+        async getSnippets() {
+            LoadingBar.start();
+            try {
+                const snippets = await highlighterService.getSnippets();
+                this.$store.commit('highlighter/addCollections', snippets);
+            } catch (errs) {
+                errs.forEach((err) => notify(err.message));
+            }
+            LoadingBar.stop();
+        },
+
         prompt(title) {
             return this.$q.dialog({
                 title,
@@ -114,7 +146,12 @@ export default {
     },
 
     mounted() {
-        if (auth.loggedInUser) this.$store.dispatch('user/authenticate', auth.loggedInUser);
+        if (auth.loggedInUser) {
+            // immediately logged in as user in localstorage
+            this.$store.dispatch('user/authenticate', auth.loggedInUser)
+                // immediately get user collections
+                .then(async () => this.getSnippets());
+        }
     },
 
     components: {
@@ -123,5 +160,41 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@import '~quasar/src/css/variables';
+
+.code-highlighter {
+    position: sticky;
+    top: 0;
+}
+
+.snippet-collections {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+
+    &__header {
+        padding: 0 map-get($space-lg, x);
+        background-color: $cyan;
+        color: #fff;
+
+        &__title {
+            font-size: map-get($h2, size);
+        }
+    }
+
+    &__contents {
+        padding: map-get($space-lg, y) map-get($space-xl, x);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+
+        & .shiki {
+            height: auto;
+            max-height: 90vh;
+        }
+    }
+}
 </style>

@@ -8,6 +8,8 @@ export default {
             fileName: null,
             highlight: null,
             twoslash: null,
+
+            collections: [],
         };
     },
 
@@ -26,6 +28,12 @@ export default {
         },
         setHighlight(state, val) {
             state.highlight = val;
+        },
+        addCollections(state, code) {
+            state.collections.push(...code);
+        },
+        resetCollections(state) {
+            state.collections = [];
         },
     },
 };

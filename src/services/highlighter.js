@@ -44,4 +44,20 @@ export default {
 
         throw res.data.details;
     },
+
+    async getSnippets(config = {}) {
+        const user = store.state.user.id;
+        const queries = {
+            sortBy: null,
+            sort: null,
+            page: null,
+            limit: 10,
+            ...config,
+        };
+        const res = await api.post('code/list', { user }, compact(queries));
+
+        if (res.success) return res.data;
+
+        throw res.data.details;
+    },
 };
