@@ -7,29 +7,29 @@
         <div class="col-md col-12 q-pa-md column items-center">
             <div
                 v-html="rendered"
-                class="self-stretch"
+                class="full-width"
             />
+        </div>
 
-            <div
-                v-if="rendered"
-                class="code-actions"
+        <div
+            class="col-12 code-actions"
+            :class="{hidden: Boolean(rendered)}"
+        >
+            <q-btn
+                icon="get_app"
+                color="primary"
+                @click="downloadCode"
             >
-                <q-btn
-                    icon="get_app"
-                    color="primary"
-                    @click="downloadCode"
-                >
-                    Download PNG
-                </q-btn>
+                Download PNG
+            </q-btn>
 
-                <q-btn
-                    icon="add"
-                    color="positive"
-                    @click="addToCollection"
-                >
-                    Save to collection
-                </q-btn>
-            </div>
+            <q-btn
+                icon="add"
+                color="positive"
+                @click="addToCollection"
+            >
+                Save to collection
+            </q-btn>
         </div>
     </div>
 </template>
@@ -144,6 +144,7 @@ export default {
 <style lang="scss" scoped>
 .code-actions {
     width: 100%;
+    padding: 2rem 10vw;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
