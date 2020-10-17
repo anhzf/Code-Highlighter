@@ -52,18 +52,8 @@
             />
             <section class="snippet-collections row">
                 <div class="snippet-collections__header">
-                    <h1
-                        v-if="isAuth"
-                        class="snippet-collections__header__title"
-                    >
-                        My Snippets
-                    </h1>
-
-                    <h1
-                        v-else
-                        class="snippet-collections__header__title"
-                    >
-                        Login to save your code snippets
+                    <h1 class="snippet-collections__header__title">
+                        {{ isAuth ? 'My Snippets' : 'Login to save your code snippets' }}
                     </h1>
                 </div>
 
@@ -72,10 +62,38 @@
                     class="snippet-collections__contents"
                 >
                     <article
-                        v-for="(snippet, index) in collections"
-                        :key="index"
-                        v-html="snippet.code"
-                    />
+                        v-for="snippet in collections"
+                        :key="snippet.id"
+                    >
+                        <q-bar>
+                            <q-space />
+                            <q-btn
+                                icon="edit"
+                                color="green-14"
+                                dense
+                                flat
+                            >
+                                <q-tooltip>Edit snippet</q-tooltip>
+                            </q-btn>
+                            <q-btn
+                                icon="delete"
+                                color="red"
+                                dense
+                                flat
+                                @click="deleteSnippet(snippet.id)"
+                            >
+                                <q-tooltip>Delete snippet</q-tooltip>
+                            </q-btn>
+                        </q-bar>
+                        <div v-html="snippet.code" />
+                    </article>
+
+                    <q-inner-loading :showing="snippetsLoading">
+                        <q-spinner
+                            size="80px"
+                            color="primary"
+                        />
+                    </q-inner-loading>
                 </section>
             </section>
         </q-page-container>
@@ -100,6 +118,8 @@ export default {
         return {
             overlay: false,
             codeHighlighterStyles: {},
+
+            snippetsLoading: false,
         };
     },
 
@@ -137,14 +157,33 @@ export default {
         },
 
         async getSnippets() {
-            LoadingBar.start();
+            this.snippetsLoading = true;
             try {
                 const snippets = await highlighterService.getSnippets();
                 this.$store.commit('highlighter/addCollections', snippets);
             } catch (errs) {
                 errs.forEach((err) => notify(err.message));
             }
-            LoadingBar.stop();
+            this.snippetsLoading = false;
+        },
+
+        deleteSnippet(id) {
+            this.$q.dialog({
+                title: 'Are you sure to delete this snippet?',
+                cancel: true,
+            }).onOk(async () => {
+                LoadingBar.start();
+                try {
+                    await highlighterService.deleteSnippet(id);
+                    notify('Snippet removed!');
+                    this.$store.commit('highlighter/resetCollections');
+                    LoadingBar.stop();
+                    await this.getSnippets();
+                } catch (err) {
+                    notify(err);
+                    LoadingBar.stop();
+                }
+            });
         },
 
         prompt(title) {
@@ -155,7 +194,7 @@ export default {
                     model: null,
                 },
                 cancel: true,
-            }).onOk((data) => data);
+            });
         },
     },
 
@@ -202,15 +241,30 @@ export default {
     }
 
     &__contents {
+        position: relative;
         padding: map-get($space-lg, y) map-get($space-xl, x);
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
         align-items: center;
 
+        & .q-inner-loading {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+        }
+
+        & .q-bar {
+            background-color: #0f141f;
+            border-radius: .5rem .5rem 0 0;
+        }
+
         & .shiki {
             height: auto;
+            margin-top: 0;
             max-height: 90vh;
+            border-radius: 0 0 .5rem .5rem;
         }
     }
 }

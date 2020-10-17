@@ -60,4 +60,17 @@ export default {
 
         throw res.data.details;
     },
+
+    async deleteSnippet(id) {
+        const body = {
+            id,
+            user: store.state.user.id,
+        };
+
+        const res = await api.post('code/delete', body);
+
+        if (res.success) return true;
+
+        throw res.message;
+    },
 };
