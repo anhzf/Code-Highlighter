@@ -1,4 +1,5 @@
 import auth from '@/services/auth';
+import { notify } from '@/utils';
 import { LoadingBar } from 'quasar';
 
 export default {
@@ -35,9 +36,9 @@ export default {
                 const res = await auth.login(userName);
 
                 context.commit('updateAuthState', res);
-                context.commit('pushNotificationMessage', `Logged in as ${res.name}!`, { root: true });
+                notify(`Logged in as ${res.name}!`);
             } catch (err) {
-                context.commit('pushNotificationMessage', err, { root: true });
+                notify(err);
             }
             LoadingBar.stop();
         },
@@ -45,6 +46,7 @@ export default {
         logout(context) {
             LoadingBar.start();
             context.commit('resetUser');
+            context.commit('highlighter/resetCollections', null, { root: true });
             LoadingBar.stop();
         },
     },
